@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKILL SHOP | Магазин донатов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="floating-coins" id="floatingCoins"></div>
+    
+    <!-- Модальное окно для покупки -->
+    <div class="modal" id="purchaseModal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modalTitle">Оформление покупки</h3>
+            <div class="form-group">
+                <label for="nickname">Ваш ник на сервере (только английские буквы и цифры):</label>
+                <input type="text" id="nickname" placeholder="Введите ваш ник" pattern="[A-Za-z0-9]+" required>
+                <div class="error-message" id="nicknameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="contact">Контакт для связи (Telegram, начинается с @):</label>
+                <input type="text" id="contact" placeholder="@username" pattern="@.+" required>
+                <div class="error-message" id="contactError"></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-primary" id="confirmPurchase">Подтвердить</button>
+                <button class="modal-btn modal-btn-secondary" id="cancelPurchase">Отмена</button>
+            </div>
+            <div class="status-message" id="statusMessage"></div>
+            <div class="contact-owner" id="contactOwner" style="display: none;">
+                Или <a href="https://t.me/im_skillet" target="_blank" rel="noopener noreferrer">свяжитесь с владельцем</a> напрямую
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для донат-кейса -->
+    <div class="modal" id="caseModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Открытие донат-кейса</h3>
+            <div class="form-group">
+                <label for="caseNickname">Ваш ник на сервере (только английские буквы и цифры):</label>
+                <input type="text" id="caseNickname" placeholder="Введите ваш ник" pattern="[A-Za-z0-9]+" required>
+                <div class="error-message" id="caseNicknameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="caseContact">Контакт для связи (Telegram, начинается с @):</label>
+                <input type="text" id="caseContact" placeholder="@username" pattern="@.+" required>
+                <div class="error-message" id="caseContactError"></div>
+            </div>
+            <div class="case-price">
+                Стоимость одного открытия: <strong>200к</strong>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-primary" id="confirmCase">Подтвердить</button>
+                <button class="modal-btn modal-btn-secondary" id="cancelCase">Отмена</button>
+            </div>
+            <div class="status-message" id="caseStatusMessage"></div>
+            <div class="contact-owner" id="caseContactOwner" style="display: none;">
+                Или <a href="https://t.me/im_skillet" target="_blank" rel="noopener noreferrer">свяжитесь с владельцем</a> напрямую
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для входа в админку -->
+    <div class="modal" id="adminLoginModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Вход в админ панель</h3>
+            <div class="form-group">
+                <label for="adminUsername">Логин:</label>
+                <input type="text" id="adminUsername" placeholder="Введите логин">
+                <div class="error-message" id="adminUsernameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="adminPassword">Пароль:</label>
+                <input type="password" id="adminPassword" placeholder="Введите пароль">
+                <div class="error-message" id="adminPasswordError"></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-primary" id="adminLoginBtn">Войти</button>
+                <button class="modal-btn modal-btn-secondary" id="adminCancelBtn">Отмена</button>
+            </div>
+            <div class="status-message" id="adminLoginStatus"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header class="animate__animated animate__fadeInDown">
+            <h1>SKILL SHOP</h1>
+            <p class="subtitle">Приобретайте уникальные привилегии на нашем сервере</p>
+            <p class="price-note">‼️Все цены указаны в игровых монетах (к)
+монеты принимаем только на 1 сервере‼️</p>
+        </header>
+        
+        <!-- Навигационные вкладки -->
+        <div class="nav-tabs animate__animated animate__fadeIn">
+            <div class="nav-tab active" data-tab="donat">Магазин донатов</div>
+            <div class="nav-tab" data-tab="case">Донат-кейс</div>
+            <div class="nav-tab" data-tab="admin" id="adminTabBtn">Админ панель</div>
+        </div>
+        
+        <!-- Контент вкладок -->
+        <div class="tab-content active" id="donat-tab">
+            <div class="donat-list animate__animated animate__fadeInUp">
+                <h2>Доступные привилегии</h2>
+                
+                <div class="donat-grid">
+                    <div class="donat-item">
+                        <div class="donat-name">Fly</div>
+                        <div class="donat-price">37.5к</div>
+                        <button class="buy-btn" data-item="Fly" data-price="37.5к">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Premium</div>
+                        <div class="donat-price">67.5к</div>
+                        <button class="buy-btn" data-item="Premium" data-price="67.5к">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Creativ</div>
+                        <div class="donat-price">135к</div>
+                        <button class="buy-btn" data-item="Creativ" data-price="135к">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Moderator</div>
+                        <div class="donat-price">180к</div>
+                        <button class="buy-btn" data-item="Moderator" data-price="180к">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Admin</div>
+                        <div class="donat-price">255к</div>
+                        <button class="buy-btn" data-item="Admin" data-price="255к">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Operator</div>
+                        <div class="donat-price">600к</div>
+                        <button class="buy-btn" data-item="Operator" data-price="600к">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Povelitel</div>
+                        <div class="donat-price">825к</div>
+                        <button class="buy-btn" data-item="Povelitel" data-price="825к">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Anti Grif</div>
+                        <div class="donat-price">1.350кк</div>
+                        <button class="buy-btn" data-item="Anti Grif" data-price="1.350кк">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Bog</div>
+                        <div class="donat-price">1.950кк</div>
+                        <button class="buy-btn" data-item="Bog" data-price="1.950кк">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Osnovatel</div>
+                        <div class="donat-price">3.450кк</div>
+                        <button class="buy-btn" data-item="Osnovatel" data-price="3.450кк">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Sozdatel</div>
+                        <div class="donat-price">6.300кк</div>
+                        <button class="buy-btn" data-item="Sozdatel" data-price="6.300кк">Купить</button>
+                    </div>
+                    
+                    <div class="donat-item">
+                        <div class="donat-name">Developer</div>
+                        <div class="donat-price">11.250кк</div>
+                        <button class="buy-btn" data-item="Developer" data-price="11.250кк">Купить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Вкладка донат-кейса -->
+        <div class="tab-content" id="case-tab">
+            <div class="donat-list animate__animated animate__fadeInUp">
+                <h2>Донат-кейс</h2>
+                
+                <div class="case-container">
+                    <div class="case-wheel" id="caseWheel">
+                        <div class="case-pointer"></div>
+                    </div>
+                    
+                    <button class="spin-btn" id="spinBtn">Открыть за 200к</button>
+                    
+                    <div class="case-result" id="caseResult"></div>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: var(--primary);">Возможные выигрыши:</h3>
+                <ul style="margin-top: 15px; padding-left: 20px;">
+                    <li>Основатель</li>
+                    <li>Бог</li>
+                    <li>Анти гриф</li>
+                    <li>Оператор</li>
+                    <li>Админ</li>
+                    <li>Модер</li>
+                    <li>Креат</li>
+                    <li>Прем</li>
+                    <li>Флай</li>
+                    <li>1.000.000 монет</li>
+                    <li>500.000 монет</li>
+                    <li>200.000 монет</li>
+                    <li>60.000 монет</li>
+                    <li>20.000 монет</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Вкладка админ панели -->
+        <div class="tab-content" id="admin-tab">
+            <div class="donat-list animate__animated animate__fadeInUp">
+                <div id="adminLoginSection">
+                    <h2>Вход в админ панель</h2>
+                    <p>Для доступа к админ панели необходимо авторизоваться.</p>
+                    <button class="buy-btn" id="adminLoginButton" style="margin-top: 20px;">Войти</button>
+                </div>
+                
+                <div id="adminPanel" class="admin-panel" style="display: none;">
+                    <h2>Админ панель</h2>
+                    <p>Добро пожаловать, <span id="adminUsernameDisplay"></span>!</p>
+                    
+                    <div class="admin-section">
+                        <h3>Статистика</h3>
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <h4>Всего заявок</h4>
+                                <p id="totalRequests">0</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Ожидают подтверждения</h4>
+                                <p id="pendingRequests">0</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Подтверждено</h4>
+                                <p id="approvedRequests">0</p>
+                            </div>
+                            <div class="stat-card">
+                                <h4>Отклонено</h4>
+                                <p id="rejectedRequests">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Заявки на донат</h3>
+                        <div class="requests-list" id="donationRequests"></div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Заявки на донат-кейс</h3>
+                        <div class="requests-list" id="caseRequests"></div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <button class="buy-btn" id="adminLogoutButton" style="background: var(--danger);">Выйти</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="animate__animated animate__fadeInUp">
+        <p>По всем вопросам обращайтесь в Telegram: @im_skillet</p>
+        <p>© 2025 SKILL SHOP. Все права защищены.</p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
